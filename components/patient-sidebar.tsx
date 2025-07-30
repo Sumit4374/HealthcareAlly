@@ -26,6 +26,8 @@ export function PatientSidebar() {
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn")
     localStorage.removeItem("userType")
+    localStorage.removeItem("userId")
+    localStorage.removeItem("userName")
     window.location.href = "/"
   }
 

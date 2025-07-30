@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button"
 const navigation = [
   { name: "Dashboard", href: "/doctor/dashboard", icon: Home },
   { name: "Patients", href: "/doctor/patients", icon: Users },
+  { name: "Patient Reports", href: "/doctor/patient-reports", icon: FileText },
   { name: "Appointments", href: "/doctor/appointments", icon: Calendar },
-  { name: "Reports", href: "/doctor/reports", icon: FileText },
   { name: "Settings", href: "/doctor/settings", icon: Settings },
 ]
 
@@ -22,6 +22,8 @@ export function DoctorSidebar() {
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn")
     localStorage.removeItem("userType")
+    localStorage.removeItem("userId")
+    localStorage.removeItem("userName")
     window.location.href = "/"
   }
 
