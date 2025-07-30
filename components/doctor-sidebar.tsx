@@ -4,13 +4,14 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { Home, Users, Calendar, FileText, Settings, LogOut, Menu, X, Stethoscope, Shield } from "lucide-react"
+import { Home, Users, Calendar, FileText, Settings, LogOut, Menu, X, Stethoscope, Shield, FlaskConical } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 const navigation = [
   { name: "Dashboard", href: "/doctor/dashboard", icon: Home },
   { name: "Patients", href: "/doctor/patients", icon: Users },
   { name: "Patient Reports", href: "/doctor/patient-reports", icon: FileText },
+  { name: "Lab Management", href: "/doctor/lab-management", icon: FlaskConical },
   { name: "Appointments", href: "/doctor/appointments", icon: Calendar },
   { name: "Insurances", href: "/doctor/insurances", icon: Shield },
   { name: "Settings", href: "/doctor/settings", icon: Settings },

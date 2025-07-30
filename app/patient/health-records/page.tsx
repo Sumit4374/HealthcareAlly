@@ -77,6 +77,7 @@ export default function PatientHealthRecordsPage() {
                       <TabsTrigger value="all">All</TabsTrigger>
                       <TabsTrigger value="prescription">Prescriptions</TabsTrigger>
                       <TabsTrigger value="lab_report">Lab Reports</TabsTrigger>
+                      <TabsTrigger value="lab_appointment">Lab Appointments</TabsTrigger>
                       <TabsTrigger value="imaging">Imaging</TabsTrigger>
                       <TabsTrigger value="other">Other</TabsTrigger>
                     </TabsList>
