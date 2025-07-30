@@ -3,13 +3,14 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { LayoutDashboard, Calendar, Users, UserCheck, Settings, Building2, LogOut } from "lucide-react"
+import { LayoutDashboard, Calendar, Users, UserCheck, Settings, Building2, LogOut, Shield } from "lucide-react"
 
 const navigation = [
   { name: "Dashboard", href: "/hospital/dashboard", icon: LayoutDashboard },
   { name: "Appointments", href: "/hospital/appointments", icon: Calendar },
   { name: "Patients", href: "/hospital/patients", icon: Users },
   { name: "Doctors", href: "/hospital/doctors", icon: UserCheck },
+  { name: "Insurances", href: "/hospital/insurances", icon: Shield },
   { name: "Settings", href: "/hospital/settings", icon: Settings },
 ]
 

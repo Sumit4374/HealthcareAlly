@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { Home, Bell, Clock, Calendar, Bot, Activity, ShoppingCart, Scan, LogOut, Menu, X, Wallet } from "lucide-react"
+import { Home, Bell, Clock, Calendar, Bot, Activity, ShoppingCart, Scan, LogOut, Menu, X, Wallet, Shield } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 const navigation = [
@@ -14,6 +14,7 @@ const navigation = [
   { name: "Appointments", href: "/patient/appointments", icon: Calendar },
   { name: "AI Assistant", href: "/patient/ai-assistant", icon: Bot },
   { name: "Health Records", href: "/patient/health-records", icon: Activity },
+  { name: "Insurances", href: "/patient/insurances", icon: Shield },
   { name: "Pharmacy", href: "/patient/pharmacy", icon: ShoppingCart },
   { name: "HealthCoin Wallet", href: "/patient/wallet", icon: Wallet },
   { name: "Scan Prescription", href: "/patient/scan-prescription", icon: Scan },
