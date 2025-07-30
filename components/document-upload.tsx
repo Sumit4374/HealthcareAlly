@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
 import { Upload, Loader2 } from "lucide-react"
 import type { DocumentCategory, Document } from "@/types/document"
@@ -126,23 +125,23 @@ export function DocumentUpload({ patientId, onUploadComplete }: DocumentUploadPr
 
           <div>
             <Label htmlFor="category">Document Category</Label>
-            <Select
+            <select
+              id="category"
               value={category}
-              onValueChange={(value) => setCategory(value as DocumentCategory)}
+              onChange={(e) => setCategory(e.target.value as DocumentCategory)}
               disabled={isUploading}
+              className="w-full h-10 px-3 py-2 text-sm border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50"
+              aria-label="Document Category"
             >
-              <SelectTrigger id="category" className="w-full">
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="prescription">Prescription</SelectItem>
-                <SelectItem value="lab_report">Lab Report</SelectItem>
-                <SelectItem value="imaging">Imaging</SelectItem>
-                <SelectItem value="discharge_summary">Discharge Summary</SelectItem>
-                <SelectItem value="insurance">Insurance</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
+              <option value="">Select category</option>
+              <option value="prescription">Prescription</option>
+              <option value="lab_report">Lab Report</option>
+              <option value="lab_appointment">Lab Appointment</option>
+              <option value="imaging">Imaging</option>
+              <option value="consultation_notes">Consultation Notes</option>
+              <option value="discharge_summary">Discharge Summary</option>
+              <option value="other">Other</option>
+            </select>
           </div>
 
           <div>

@@ -54,9 +54,10 @@ export function DocumentCard({ document, canDelete = false, onDeleted }: Documen
     const labels: Record<DocumentCategory, string> = {
       prescription: "Prescription",
       lab_report: "Lab Report",
+      lab_appointment: "Lab Appointment",
       imaging: "Imaging",
+      consultation_notes: "Consultation Notes",
       discharge_summary: "Discharge Summary",
-      insurance: "Insurance",
       other: "Other",
     }
     return labels[category] || "Document"
@@ -78,9 +79,10 @@ export function DocumentCard({ document, canDelete = false, onDeleted }: Documen
     const colors: Record<DocumentCategory, string> = {
       prescription: "bg-purple-100 text-purple-800",
       lab_report: "bg-blue-100 text-blue-800",
+      lab_appointment: "bg-teal-100 text-teal-800",
       imaging: "bg-green-100 text-green-800",
+      consultation_notes: "bg-orange-100 text-orange-800",
       discharge_summary: "bg-yellow-100 text-yellow-800",
-      insurance: "bg-gray-100 text-gray-800",
       other: "bg-gray-100 text-gray-800",
     }
     return colors[category] || "bg-gray-100 text-gray-800"

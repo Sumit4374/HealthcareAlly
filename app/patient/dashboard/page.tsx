@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Bell, Clock, Calendar, Scan, ShoppingCart, Pill, ChevronRight, Coins, Wallet } from "lucide-react"
+import { Bell, Clock, Calendar, Scan, ShoppingCart, Pill, ChevronRight, Coins, Wallet, TestTube, FlaskConical } from "lucide-react"
 import Link from "next/link"
 import { PatientSidebar } from "@/components/patient-sidebar"
 
@@ -120,6 +120,43 @@ export default function PatientDashboard() {
                     <p className="text-gray-400 text-sm mb-4">Add prescription to your routine</p>
                     <Link href="/patient/scan-prescription">
                       <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">Scan Now</Button>
+                    </Link>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gray-800 border-gray-700">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="flex items-center mb-2">
+                      <TestTube className="w-5 h-5 text-emerald-400 mr-2" />
+                      <h3 className="text-white font-semibold">Lab Appointments</h3>
+                    </div>
+                    <p className="text-gray-400 text-sm mb-4">Book laboratory tests</p>
+                    <Link href="/patient/lab-appointments">
+                      <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">Book Test</Button>
+                    </Link>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Lab Reports and Purchase Medicine */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <Card className="bg-gray-800 border-gray-700">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="flex items-center mb-2">
+                      <FlaskConical className="w-5 h-5 text-emerald-400 mr-2" />
+                      <h3 className="text-white font-semibold">Lab Reports</h3>
+                    </div>
+                    <p className="text-gray-400 text-sm mb-4">View your test results</p>
+                    <Link href="/patient/lab-reports">
+                      <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">View Reports</Button>
                     </Link>
                   </div>
                 </div>
