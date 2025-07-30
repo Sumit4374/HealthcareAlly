@@ -251,8 +251,8 @@ export function ChatSystem({
 
   return (
     <div className="h-full flex flex-col">
-      {/* Connection Status */}
-      <div className="flex items-center justify-between p-3 bg-gray-50 border-b">
+      {/* Connection Status - Fixed height */}
+      <div className="flex-shrink-0 flex items-center justify-between p-3 bg-gray-50 border-b">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
             {recipientType === "doctor" ? (
@@ -275,75 +275,81 @@ export function ChatSystem({
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-hidden">
-        <ScrollArea className="h-full p-4">
-          <div className="space-y-4">
-            {messages.length === 0 ? (
-              <div className="text-center text-gray-500 py-8">
-                <div className="mb-2">No messages yet</div>
-                <div className="text-sm">Start the conversation!</div>
-              </div>
-            ) : (
-              messages.map((message) => {
-                const isMyMessage = message.senderId === currentUserId
-                const senderName = message.senderId === "doctor-123" ? "Dr. Smith" : "John Patient"
-                return (
-                  <div key={message._id}>
-                    {/* Debug info - shows sender */}
-                    <div className="text-xs text-gray-400 mb-1">
-                      {senderName} • {isMyMessage ? "You" : "Them"}
-                    </div>
-                    <div className={`flex ${isMyMessage ? "justify-end" : "justify-start"}`}>
-                      <div
-                        className={`max-w-[70%] rounded-lg p-3 ${
-                          isMyMessage ? "bg-emerald-500 text-white" : "bg-gray-100 text-gray-900"
-                        }`}
-                      >
-                        <p className="text-sm">{message.text}</p>
-                        <div className="flex items-center justify-between mt-1">
-                          <span className="text-xs opacity-70">{formatTime(message.createdAt)}</span>
-                          <ReadReceipt message={message} />
+      {/* Messages Area - Flexible height with proper constraints */}
+      <div className="flex-1 min-h-0 overflow-hidden">
+        <ScrollArea className="h-full">
+          <div className="p-4">
+            <div className="space-y-4">
+              {messages.length === 0 ? (
+                <div className="text-center text-gray-500 py-8">
+                  <div className="mb-2">No messages yet</div>
+                  <div className="text-sm">Start the conversation!</div>
+                </div>
+              ) : (
+                messages.map((message) => {
+                  const isMyMessage = message.senderId === currentUserId
+                  const senderName = message.senderId === "doctor-123" ? "Dr. Smith" : "John Patient"
+                  return (
+                    <div key={message._id}>
+                      {/* Debug info - shows sender */}
+                      <div className="text-xs text-gray-400 mb-1">
+                        {senderName} • {isMyMessage ? "You" : "Them"}
+                      </div>
+                      <div className={`flex ${isMyMessage ? "justify-end" : "justify-start"}`}>
+                        <div
+                          className={`max-w-[70%] rounded-lg p-3 ${
+                            isMyMessage ? "bg-emerald-500 text-white" : "bg-gray-100 text-gray-900"
+                          }`}
+                        >
+                          <p className="text-sm break-words">{message.text}</p>
+                          <div className="flex items-center justify-between mt-1">
+                            <span className="text-xs opacity-70">{formatTime(message.createdAt)}</span>
+                            <ReadReceipt message={message} />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                )
-              })
-            )}
-            <div ref={messagesEndRef} />
+                  )
+                })
+              )}
+              <div ref={messagesEndRef} />
+            </div>
           </div>
         </ScrollArea>
       </div>
 
-      {/* Input */}
-      <div className="border-t p-4">
-        <div className="mb-2 text-xs text-gray-500 flex items-center justify-between">
-          <span>
-            Sending as: <strong>{currentUserType === "doctor" ? "Dr. Smith" : "John Patient"}</strong>
-          </span>
-          <span className="text-xs">
-            ✓ = Sent • <span className="text-blue-500">✓✓</span> = Seen
-          </span>
+      {/* Input Area - Fixed height at bottom */}
+      <div className="flex-shrink-0 border-t bg-white">
+        <div className="p-4">
+          <div className="mb-2 text-xs text-gray-500 flex items-center justify-between">
+            <span>
+              Sending as: <strong>{currentUserType === "doctor" ? "Dr. Smith" : "John Patient"}</strong>
+            </span>
+            <span className="text-xs">
+              ✓ = Sent • <span className="text-blue-500">✓✓</span> = Seen
+            </span>
+          </div>
+          <form onSubmit={handleSendMessage} className="flex items-center space-x-2">
+            <Input
+              placeholder={`Type a message as ${currentUserType}...`}
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              disabled={sending}
+              className="flex-1"
+            />
+            <Button
+              type="submit"
+              disabled={!newMessage.trim() || sending}
+              className="bg-emerald-500 hover:bg-emerald-600 flex-shrink-0"
+            >
+              {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+            </Button>
+          </form>
         </div>
-        <form onSubmit={handleSendMessage} className="flex items-center space-x-2">
-          <Input
-            placeholder={`Type a message as ${currentUserType}...`}
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            disabled={sending}
-            className="flex-1"
-          />
-          <Button
-            type="submit"
-            disabled={!newMessage.trim() || sending}
-            className="bg-emerald-500 hover:bg-emerald-600"
-          >
-            {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-          </Button>
-        </form>
       </div>
     </div>
   )
 }
+
+

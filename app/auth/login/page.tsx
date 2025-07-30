@@ -31,6 +31,7 @@ export default function LoginPage() {
       patient: { email: "patient@demo.com", password: "demo123" },
       doctor: { email: "doctor@demo.com", password: "demo123" },
       hospital: { email: "hospital@demo.com", password: "demo123" },
+      laboratory: { email: "lab@demo.com", password: "demo123" },
     }
 
     const demo = demoCredentials[activeTab as keyof typeof demoCredentials]
@@ -43,11 +44,15 @@ export default function LoginPage() {
       // Redirect based on user type
       if (activeTab === "patient") {
         router.push("/patient/dashboard")
-      } else if (activeTab === "doctor") {
+      } 
+      if (activeTab === "laboratory") {
+        router.push("/lab/dashboard")
+      }else if (activeTab === "doctor") {
         router.push("/doctor/dashboard")
       } else {
         router.push("/hospital/dashboard")
       }
+      
     } else {
       alert("Invalid credentials. Use demo credentials:\nEmail: " + demo.email + "\nPassword: demo123")
     }
@@ -93,7 +98,7 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-6">
+              <TabsList className="grid w-full grid-cols-4 mb-6">
                 <TabsTrigger value="patient" className="flex items-center gap-1">
                   <User className="w-3 h-3" />
                   Patient
@@ -105,6 +110,9 @@ export default function LoginPage() {
                 <TabsTrigger value="hospital" className="flex items-center gap-1">
                   <Building2 className="w-3 h-3" />
                   Hospital
+                </TabsTrigger>
+                <TabsTrigger value="laboratory"> {/* NEW */}
+                  Lab
                 </TabsTrigger>
               </TabsList>
 
