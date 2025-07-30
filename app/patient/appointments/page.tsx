@@ -12,6 +12,7 @@ export default function PatientAppointmentsPage() {
   const [appointments] = useState([
     {
       id: 1,
+      doctorId: "doctor-123",
       doctorName: "Dr. Sarah Johnson",
       specialty: "Cardiology",
       date: "2024-01-20",
@@ -23,6 +24,7 @@ export default function PatientAppointmentsPage() {
     },
     {
       id: 2,
+      doctorId: "doctor-456",
       doctorName: "Dr. Michael Chen",
       specialty: "Dermatology",
       date: "2024-01-22",
@@ -34,6 +36,7 @@ export default function PatientAppointmentsPage() {
     },
     {
       id: 3,
+      doctorId: "doctor-789",
       doctorName: "Dr. Emily Davis",
       specialty: "Neurology",
       date: "2024-01-18",
@@ -73,7 +76,6 @@ export default function PatientAppointmentsPage() {
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-emerald-50 to-emerald-100">
       <PatientSidebar />
-
       <div className="flex-1 p-6">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
@@ -93,7 +95,6 @@ export default function PatientAppointmentsPage() {
                 <div className="text-3xl font-bold text-gray-900">{upcomingAppointments.length}</div>
               </CardContent>
             </Card>
-
             <Card className="bg-white border-emerald-200">
               <CardContent className="p-6 text-center">
                 <div className="flex items-center justify-center mb-2">
@@ -103,7 +104,6 @@ export default function PatientAppointmentsPage() {
                 <div className="text-3xl font-bold text-gray-900">{pastAppointments.length}</div>
               </CardContent>
             </Card>
-
             <Card className="bg-white border-emerald-200">
               <CardContent className="p-6 text-center">
                 <div className="flex items-center justify-center mb-2">
@@ -134,7 +134,6 @@ export default function PatientAppointmentsPage() {
                               {getStatusText(appointment.status)}
                             </Badge>
                           </div>
-
                           <div className="grid grid-cols-2 gap-4 mb-3">
                             <div>
                               <p className="text-gray-600 text-sm">Specialty</p>
@@ -155,20 +154,18 @@ export default function PatientAppointmentsPage() {
                               <p className="font-medium">${appointment.fee}</p>
                             </div>
                           </div>
-
                           <div className="flex items-center text-gray-600 text-sm">
                             <MapPin className="w-4 h-4 mr-1" />
                             {appointment.location}
                           </div>
                         </div>
-
                         <div className="flex flex-col space-y-2">
                           <Button
                             size="sm"
                             className="bg-blue-600 hover:bg-blue-700 text-white"
                             onClick={() => {
                               setSelectedDoctor({
-                                id: appointment.id,
+                                id: appointment.doctorId,
                                 name: appointment.doctorName,
                                 specialty: appointment.specialty,
                               })
@@ -210,7 +207,6 @@ export default function PatientAppointmentsPage() {
                               {getStatusText(appointment.status)}
                             </Badge>
                           </div>
-
                           <div className="grid grid-cols-2 gap-4 mb-3">
                             <div>
                               <p className="text-gray-600 text-sm">Specialty</p>
@@ -224,7 +220,6 @@ export default function PatientAppointmentsPage() {
                             </div>
                           </div>
                         </div>
-
                         <div className="flex flex-col space-y-2">
                           <Button
                             size="sm"
@@ -232,7 +227,7 @@ export default function PatientAppointmentsPage() {
                             className="border-emerald-500 text-emerald-600 bg-transparent"
                             onClick={() => {
                               setSelectedDoctor({
-                                id: appointment.id,
+                                id: appointment.doctorId,
                                 name: appointment.doctorName,
                                 specialty: appointment.specialty,
                               })
@@ -275,9 +270,9 @@ export default function PatientAppointmentsPage() {
             </div>
             <div className="flex-1">
               <ChatSystem
-                currentUserId="patient-1"
+                currentUserId="patient-123"
                 currentUserType="patient"
-                recipientId={selectedDoctor.id.toString()}
+                recipientId={selectedDoctor.id}
                 recipientName={selectedDoctor.name}
                 recipientType="doctor"
               />

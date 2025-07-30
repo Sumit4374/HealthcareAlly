@@ -13,7 +13,7 @@ export default function DoctorPatientsPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [patients] = useState([
     {
-      id: 1,
+      id: "patient-123",
       name: "John Smith",
       age: 35,
       gender: "Male",
@@ -24,7 +24,7 @@ export default function DoctorPatientsPage() {
       email: "john.smith@email.com",
     },
     {
-      id: 2,
+      id: "patient-456",
       name: "Sarah Johnson",
       age: 28,
       gender: "Female",
@@ -35,7 +35,7 @@ export default function DoctorPatientsPage() {
       email: "sarah.johnson@email.com",
     },
     {
-      id: 3,
+      id: "patient-789",
       name: "Michael Brown",
       age: 45,
       gender: "Male",
@@ -63,7 +63,6 @@ export default function DoctorPatientsPage() {
   return (
     <div className="flex min-h-screen bg-gray-900">
       <DoctorSidebar />
-
       <div className="flex-1 p-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
@@ -102,7 +101,6 @@ export default function DoctorPatientsPage() {
                         </span>
                         <Badge className={`ml-3 ${getStatusColor(patient.status)}`}>{patient.status}</Badge>
                       </div>
-
                       <div className="grid grid-cols-2 gap-4 mb-3">
                         <div>
                           <p className="text-gray-400 text-sm">Last Visit</p>
@@ -122,7 +120,6 @@ export default function DoctorPatientsPage() {
                         </div>
                       </div>
                     </div>
-
                     <div className="flex flex-col space-y-2">
                       <Button
                         size="sm"
@@ -161,6 +158,8 @@ export default function DoctorPatientsPage() {
           )}
         </div>
       </div>
+
+      {/* Chat Modal */}
       {isChatOpen && selectedPatient && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg w-full max-w-2xl h-[600px] flex flex-col">
@@ -170,11 +169,11 @@ export default function DoctorPatientsPage() {
                 Close
               </Button>
             </div>
-            <div className="flex-1 p-4">
+            <div className="flex-1">
               <ChatSystem
-                currentUserId="doctor-1"
+                currentUserId="doctor-123"
                 currentUserType="doctor"
-                recipientId={selectedPatient.id.toString()}
+                recipientId={selectedPatient.id}
                 recipientName={selectedPatient.name}
                 recipientType="patient"
               />
