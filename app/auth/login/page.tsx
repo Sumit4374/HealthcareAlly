@@ -45,7 +45,7 @@ export default function LoginPage() {
       if (activeTab === "patient") {
         router.push("/patient/dashboard")
       } 
-      if (activeTab === "laboratory") {
+      else if (activeTab === "laboratory") {
         router.push("/lab/dashboard")
       }else if (activeTab === "doctor") {
         router.push("/doctor/dashboard")

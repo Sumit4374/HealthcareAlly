@@ -1,11 +1,10 @@
 "use client"
-
 import type React from "react"
 import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Send, User, Stethoscope, Loader2, Wifi } from "lucide-react"
+import { Send, User, Stethoscope, Loader2, Wifi, Paperclip, X, FileText, ImageIcon } from "lucide-react"
 
 interface Message {
   _id: string
@@ -14,6 +13,14 @@ interface Message {
   text: string
   seen: boolean
   createdAt: string
+  attachments?: FileAttachment[]
+}
+
+interface FileAttachment {
+  name: string
+  size: number
+  type: string
+  url: string
 }
 
 interface ChatSystemProps {
@@ -86,7 +93,6 @@ const markMessagesAsSeen = (currentUserId: string, recipientId: string) => {
     }
     return msg
   })
-
   if (hasUpdates) {
     saveMessages(updatedMessages)
   }
@@ -103,7 +109,9 @@ export function ChatSystem({
   const [newMessage, setNewMessage] = useState("")
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([])
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -126,7 +134,6 @@ export function ChatSystem({
       )
       setMessages(conversationMessages)
       setLoading(false)
-
       // Mark messages from recipient as seen
       setTimeout(() => {
         markMessagesAsSeen(currentUserId, recipientId)
@@ -160,22 +167,50 @@ export function ChatSystem({
     return () => window.removeEventListener("storage", handleStorageChange)
   }, [currentUserId, recipientId])
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || [])
+    setAttachedFiles((prev) => [...prev, ...files])
+  }
+
+  const removeFile = (index: number) => {
+    setAttachedFiles((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return "0 Bytes"
+    const k = 1024
+    const sizes = ["Bytes", "KB", "MB", "GB"]
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+  }
+
   const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault()
-    if (!newMessage.trim() || sending) return
+    if ((!newMessage.trim() && attachedFiles.length === 0) || sending) return
 
     const messageText = newMessage.trim()
+    const files = [...attachedFiles]
     setNewMessage("")
+    setAttachedFiles([])
     setSending(true)
+
+    // Create file attachments data
+    const attachments: FileAttachment[] = files.map((file) => ({
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      url: URL.createObjectURL(file), // In a real app, you'd upload to a server
+    }))
 
     // Create new message with unique ID
     const newMsg: Message = {
-      _id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, // More unique ID
+      _id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       senderId: currentUserId,
       receiverId: recipientId,
-      text: messageText,
+      text: messageText || (files.length > 0 ? `📎 Sent ${files.length} file(s)` : ""),
       seen: false,
       createdAt: new Date().toISOString(),
+      attachments: attachments.length > 0 ? attachments : undefined,
     }
 
     try {
@@ -199,12 +234,18 @@ export function ChatSystem({
           return [...prev, newMsg]
         })
         console.log(`✅ Message sent from ${currentUserType} (${currentUserId}) to ${recipientType} (${recipientId})`)
+
+        // Log file attachments
+        if (files.length > 0) {
+          console.log(`📎 Files attached: ${files.map((f) => f.name).join(", ")}`)
+        }
       } else {
         console.log("⚠️ Duplicate message prevented")
       }
     } catch (error) {
       console.error("Error sending message:", error)
       setNewMessage(messageText) // Restore message on error
+      setAttachedFiles(files) // Restore files on error
     } finally {
       setSending(false)
     }
@@ -250,7 +291,7 @@ export function ChatSystem({
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col max-h-[600px]">
       {/* Connection Status - Fixed height */}
       <div className="flex-shrink-0 flex items-center justify-between p-3 bg-gray-50 border-b">
         <div className="flex items-center space-x-2">
@@ -297,11 +338,34 @@ export function ChatSystem({
                       </div>
                       <div className={`flex ${isMyMessage ? "justify-end" : "justify-start"}`}>
                         <div
-                          className={`max-w-[70%] rounded-lg p-3 ${
+                          className={`max-w-[85%] rounded-lg p-3 break-words ${
                             isMyMessage ? "bg-emerald-500 text-white" : "bg-gray-100 text-gray-900"
                           }`}
                         >
-                          <p className="text-sm break-words">{message.text}</p>
+                          {message.text && <p className="text-sm whitespace-pre-wrap break-words">{message.text}</p>}
+
+                          {/* File Attachments */}
+                          {message.attachments && message.attachments.length > 0 && (
+                            <div className="mt-2 space-y-2">
+                              {message.attachments.map((attachment, index) => (
+                                <div
+                                  key={index}
+                                  className={`flex items-center space-x-2 p-2 rounded ${
+                                    isMyMessage ? "bg-emerald-600" : "bg-gray-200"
+                                  }`}
+                                >
+                                  {attachment.type.startsWith("image/") ? (
+                                    <ImageIcon className="w-4 h-4" />
+                                  ) : (
+                                    <FileText className="w-4 h-4" />
+                                  )}
+                                  <span className="text-xs truncate max-w-[150px]">{attachment.name}</span>
+                                  <span className="text-xs opacity-70">({formatFileSize(attachment.size)})</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
                           <div className="flex items-center justify-between mt-1">
                             <span className="text-xs opacity-70">{formatTime(message.createdAt)}</span>
                             <ReadReceipt message={message} />
@@ -329,18 +393,72 @@ export function ChatSystem({
               ✓ = Sent • <span className="text-blue-500">✓✓</span> = Seen
             </span>
           </div>
-          <form onSubmit={handleSendMessage} className="flex items-center space-x-2">
-            <Input
-              placeholder={`Type a message as ${currentUserType}...`}
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              disabled={sending}
-              className="flex-1"
-            />
+
+          {/* File Attachments Preview */}
+          {attachedFiles.length > 0 && (
+            <div className="mb-3 p-2 bg-gray-50 rounded-lg">
+              <div className="text-xs text-gray-600 mb-2">Attached files:</div>
+              <div className="space-y-1">
+                {attachedFiles.map((file, index) => (
+                  <div key={index} className="flex items-center justify-between bg-white p-2 rounded border">
+                    <div className="flex items-center space-x-2">
+                      {file.type.startsWith("image/") ? (
+                        <ImageIcon className="w-4 h-4 text-blue-500" />
+                      ) : (
+                        <FileText className="w-4 h-4 text-gray-500" />
+                      )}
+                      <span className="text-sm truncate max-w-[200px]">{file.name}</span>
+                      <span className="text-xs text-gray-400">({formatFileSize(file.size)})</span>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeFile(index)}
+                      className="h-6 w-6 p-0"
+                    >
+                      <X className="w-3 h-3" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <form onSubmit={handleSendMessage} className="flex items-end space-x-2">
+            <div className="flex-1">
+              <div className="flex items-center space-x-2">
+                <Input
+                  placeholder={`Type a message as ${currentUserType}...`}
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  disabled={sending}
+                  className="flex-1"
+                />
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileSelect}
+                  multiple
+                  accept="image/*,.pdf,.doc,.docx,.txt"
+                  className="hidden"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={sending}
+                  className="flex-shrink-0"
+                >
+                  <Paperclip className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
             <Button
               type="submit"
-              disabled={!newMessage.trim() || sending}
+              disabled={(!newMessage.trim() && attachedFiles.length === 0) || sending}
               className="bg-emerald-500 hover:bg-emerald-600 flex-shrink-0"
             >
               {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
@@ -351,5 +469,3 @@ export function ChatSystem({
     </div>
   )
 }
-
-
